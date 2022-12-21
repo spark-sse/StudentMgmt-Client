@@ -19,6 +19,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HomeComponentModule } from "./home/home.component";
 import { NavigationComponentModule } from "./navigation/navigation.component";
+import { OAuthModule } from "angular-oauth2-oidc";
 
 registerLocaleData(localeDe, "de", localeDeExtra);
 
@@ -39,11 +40,17 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 		AuthModule,
 		NavigationComponentModule,
 		HomeComponentModule,
+		OAuthModule.forRoot({
+			resourceServer: {
+				allowedUrls: [window["__env"]["API_BASE_PATH"]],
+				sendAccessToken: true
+			}
+		}),
 		ApiModule.forRoot(
 			() =>
 				new Configuration({
-					basePath: window["__env"]["API_BASE_PATH"],
-					accessToken: (): string => AuthService.getAccessToken()
+					basePath: window["__env"]["API_BASE_PATH"]
+					// accessToken: (): string => AuthService.getAccessToken()
 				})
 		),
 		TranslateModule.forRoot({

@@ -1,7 +1,7 @@
 import { createAction, props } from "@ngrx/store";
 import { AuthResultDto, CourseDto, CredentialsDto, UserDto } from "@student-mgmt/api-client";
 
-export const login = createAction("[Login] Login", props<{ authResult: AuthResultDto }>());
+export const login = createAction("[Login] Login", props<{ user: UserDto }>());
 
 export const logout = createAction("[Logout] Logout");
 

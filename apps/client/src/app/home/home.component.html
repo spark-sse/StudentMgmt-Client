@@ -24,7 +24,7 @@
 		<ng-container *ngTemplateOutlet="uniLogo"></ng-container>
 
 		<span class="actions">
-			<button mat-flat-button color="accent" (click)="openLoginDialog()">Login</button>
+			<button mat-flat-button color="accent" (click)="auth.login()">Login</button>
 			<a [routerLink]="['/courses']" class="link-none">
 				<button mat-stroked-button>
 					{{ "Domain.Courses" | translate }}

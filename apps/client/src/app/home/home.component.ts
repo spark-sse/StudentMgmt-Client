@@ -4,9 +4,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { RouterModule } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { LoginDialog } from "@student-mgmt-client/auth";
+import { AuthService } from "@student-mgmt-client/auth";
 import { UnsubscribeOnDestroy } from "@student-mgmt-client/util-helper";
-import { MatrNrDialog } from "../matr-nr/matr-nr.dialog";
 
 @Component({
 	selector: "student-mgmt-home",
@@ -17,7 +16,11 @@ import { MatrNrDialog } from "../matr-nr/matr-nr.dialog";
 export class HomeComponent extends UnsubscribeOnDestroy implements OnInit {
 	currentLanguage: string;
 
-	constructor(readonly dialog: MatDialog, readonly translate: TranslateService) {
+	constructor(
+		readonly dialog: MatDialog,
+		readonly translate: TranslateService,
+		readonly auth: AuthService
+	) {
 		super();
 	}
 
@@ -26,10 +29,6 @@ export class HomeComponent extends UnsubscribeOnDestroy implements OnInit {
 		this.subs.sink = this.translate.onLangChange.subscribe(({ lang }) => {
 			this.currentLanguage = lang;
 		});
-	}
-
-	openLoginDialog(): void {
-		this.dialog.open(LoginDialog);
 	}
 
 	setLanguage(lang: string): void {

@@ -13,8 +13,7 @@ export class AuthEffects {
 		() =>
 			this.actions$.pipe(
 				ofType(AuthActions.login),
-				tap(({ authResult }) => {
-					const user = authResult.user;
+				tap(({ user }) => {
 					if (user.role === "USER" && !Number.isFinite(user.matrNr)) {
 						const ignoreMatrNrDialog =
 							localStorage.getItem("ignoreMatrNrDialog") === "true";
@@ -35,6 +34,7 @@ export class AuthEffects {
 				ofType(AuthActions.logout),
 				tap(() => {
 					localStorage.removeItem(this.authKey);
+					sessionStorage.removeItem(this.authKey);
 					this.router.navigateByUrl("courses");
 				})
 			),

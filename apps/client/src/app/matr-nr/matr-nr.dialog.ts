@@ -65,21 +65,13 @@ export class MatrNrDialog implements OnInit {
 				this.userApi.setMatrNr({ matrNr }, this.user.id)
 			);
 
-			const { authResult } = await firstValueFrom(
-				this.store.select(AuthSelectors.selectAuthState)
-			);
-
-			const updatedAuthResult = {
-				...authResult,
-				user: updatedUser
-			};
-
 			this.store.dispatch(
 				AuthActions.login({
-					authResult: updatedAuthResult
+					user: updatedUser
 				})
 			);
-			AuthService.setAuthState(updatedAuthResult);
+
+			AuthService.setAuthState(updatedUser);
 
 			this.toast.success();
 			this.dialogRef.close(true);

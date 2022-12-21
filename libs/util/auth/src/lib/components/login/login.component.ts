@@ -17,15 +17,15 @@ export class LoginComponent {
 	constructor(private authService: AuthService, private router: Router) {}
 
 	login(username: string): void {
-		this.authService.devLogin(username).subscribe({
-			next: user => {
-				this.router.navigateByUrl("");
-			},
-			error: error => {
-				console.log(error);
-				this.errorMessage = error.error.message;
-			}
-		});
+		// this.authService.devLogin(username).subscribe({
+		// 	next: user => {
+		// 		this.router.navigateByUrl("");
+		// 	},
+		// 	error: error => {
+		// 		console.log(error);
+		// 		this.errorMessage = error.error.message;
+		// 	}
+		// });
 	}
 }
 

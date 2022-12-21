@@ -2,13 +2,12 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component, NgModule, OnInit } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
 import { Store } from "@ngrx/store";
 import { TranslateService } from "@ngx-translate/core";
-import { LoginDialog } from "@student-mgmt-client/auth";
+import { AuthService } from "@student-mgmt-client/auth";
 import { NavigationUiComponentModule } from "@student-mgmt-client/components";
 import { ThemeService } from "@student-mgmt-client/services";
-import { AuthActions, AuthSelectors } from "@student-mgmt-client/state";
+import { AuthSelectors } from "@student-mgmt-client/state";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 
@@ -30,10 +29,10 @@ export class NavigationComponent implements OnInit {
 	constructor(
 		readonly themeService: ThemeService,
 		private breakpointObserver: BreakpointObserver,
-		private dialog: MatDialog,
 		private store: Store,
 		private translate: TranslateService,
-		private overlayContainer: OverlayContainer
+		private overlayContainer: OverlayContainer,
+		private auth: AuthService
 	) {}
 
 	ngOnInit(): void {
@@ -59,12 +58,12 @@ export class NavigationComponent implements OnInit {
 		localStorage.setItem("language", lang);
 	}
 
-	openLoginDialog(): void {
-		this.dialog.open<LoginDialog, undefined, unknown>(LoginDialog);
+	login(): void {
+		this.auth.login();
 	}
 
 	logout(): void {
-		this.store.dispatch(AuthActions.logout());
+		this.auth.logout();
 	}
 }
 

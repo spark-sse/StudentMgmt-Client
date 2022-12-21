@@ -59,10 +59,10 @@ export function getSemesterString(value: string): string {
 export function getSemesterList(currentYear = new Date().getFullYear()): string[] {
 	const semesters: string[] = [];
 
-	for (let year = 2019; year <= currentYear; year++) {
+	for (let year = currentYear; year >= 2019; year--) {
 		semesters.push(
-			getSemester(new Date(year, 6)), // Summer semester
-			getSemester(new Date(year, 12)) // Winter semester
+			getSemester(new Date(year, 12)), // Winter semester
+			getSemester(new Date(year, 6)) // Summer semester
 		);
 	}
 
