@@ -6,10 +6,9 @@ import {
 	HttpRequest
 } from "@angular/common/http";
 import { Injectable, Injector } from "@angular/core";
+import { ToastService } from "@student-mgmt-client/services";
 import { Observable, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { ToastService } from "@student-mgmt-client/services";
-import { AuthService } from "./auth.service";
 
 @Injectable({ providedIn: "root" })
 export class ErrorInterceptorService implements HttpInterceptor {
@@ -23,8 +22,6 @@ export class ErrorInterceptorService implements HttpInterceptor {
 	 * Invoked when user is not logged in or user's authentication token has expired.
 	 */
 	private handleHttpError(err: HttpErrorResponse): Observable<any> {
-		const authService = this.injector.get(AuthService);
-
 		if (err.status == 0) {
 			const toast = this.injector.get(ToastService);
 			toast.error("Error.ConnectionRefused");
@@ -33,7 +30,8 @@ export class ErrorInterceptorService implements HttpInterceptor {
 		if (err.status === 401) {
 			const toast = this.injector.get(ToastService);
 			toast.error("Error.Unauthorized");
-			authService.logout();
+			// const authService = this.injector.get(AuthService);
+			// authService.logout();
 		}
 
 		return throwError(err);

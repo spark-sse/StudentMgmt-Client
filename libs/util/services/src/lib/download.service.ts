@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { AuthService } from "@student-mgmt-client/auth";
 import { ToastService } from "./toast.service";
 
 @Injectable({ providedIn: "root" })
@@ -18,10 +17,7 @@ export class DownloadService {
 	downloadFromApi(endpoint: string, filename: string): void {
 		this.http
 			.get(`${this.basePath}/${endpoint}`, {
-				responseType: "blob",
-				headers: {
-					["Authorization"]: `Bearer ${AuthService.getAccessToken()}`
-				}
+				responseType: "blob"
 			})
 			.subscribe({
 				next: blob => {

@@ -36,7 +36,7 @@
 		"@ngx-translate/http-loader": "^7.0.0",
 		"@student-mgmt/api-client": "^2.7.2",
 		"@swimlane/ngx-charts": "^20.1.0",
-		"angular-oauth2-oidc": "^13.0.1",
+		"angular-auth-oidc-client": "^15.0.2",
 		"ngx-toastr": "^15.0.0",
 		"rxjs": "~7.5.0",
 		"subsink": "^1.0.2",

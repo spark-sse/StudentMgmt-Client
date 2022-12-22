@@ -41,28 +41,6 @@ export class AuthEffects {
 		{ dispatch: false }
 	);
 
-	setCourses$ = createEffect(
-		() =>
-			this.actions$.pipe(
-				ofType(AuthActions.setCourses),
-				tap(action => {
-					const user = AuthService.getUser();
-					const accessToken = AuthService.getAccessToken();
-
-					user.courses = action.courses;
-
-					localStorage.setItem(
-						this.authKey,
-						JSON.stringify({
-							user,
-							accessToken
-						})
-					);
-				})
-			),
-		{ dispatch: false }
-	);
-
 	private authKey = "auth";
 
 	constructor(private actions$: Actions, private router: Router, private dialog: MatDialog) {}

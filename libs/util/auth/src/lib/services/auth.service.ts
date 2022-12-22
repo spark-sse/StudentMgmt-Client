@@ -2,45 +2,37 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { AuthActions, AuthSelectors } from "@student-mgmt-client/state";
 import { AuthenticationApi, UserDto } from "@student-mgmt/api-client";
-import { OAuthService } from "angular-oauth2-oidc";
+import { OidcSecurityService } from "angular-auth-oidc-client";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
+	static _accessToken = "";
 	static readonly authKey = "whoAmI";
 
 	user$ = this.store.select(AuthSelectors.selectUser);
 
 	constructor(
-		private oauth: OAuthService,
+		// private oauth: OAuthService,
+		private oidc: OidcSecurityService,
 		private authApi: AuthenticationApi,
 		private store: Store
 	) {
-		oauth.configure({
-			issuer: window["__env"]["AUTH_ISSUER_URL"],
-			clientId: window["__env"]["AUTH_CLIENT_ID"],
-			scope: "openid profile email offline_access",
-			redirectUri: window.location.origin,
-			responseType: "code", // Code Flow
-			showDebugInformation: false,
-			useSilentRefresh: true,
-			// silentRefreshRedirectUri: window.location.origin + "/silent-refresh.html",
-			useIdTokenHintForSilentRefresh: true,
-			timeoutFactor: 0.1,
-			// Only necessary, if provider requires specified audience
-			customQueryParams: {
-				audience: "Student-Mgmt-API"
+		this.oidc.isAuthenticated$.subscribe(res => {
+			if (res.isAuthenticated) {
+				this.oidc.getAccessToken().subscribe(token => {
+					AuthService._accessToken = token;
+				});
+			} else {
+				this.store.dispatch(AuthActions.logout());
 			}
 		});
 
-		this.oauth.setupAutomaticSilentRefresh({}, "access_token");
+		this.oidc.checkAuth().subscribe(data => {
+			AuthService._accessToken = data.accessToken;
 
-		this.oauth.events.subscribe(e => {
-			console.log(e);
-
-			if (e.type === "token_received") {
+			if (data.isAuthenticated) {
 				this.authApi.whoAmI().subscribe({
 					next: user => {
-						// console.log({ user });
 						AuthService.setAuthState(user);
 						this.store.dispatch(
 							AuthActions.login({
@@ -57,15 +49,6 @@ export class AuthService {
 				});
 			}
 		});
-	}
-
-	/**
-	 * Returns the stored AccessToken (JWT), which can be assigned to the Authorization-header
-	 * to authenticate the user for requests to the server.
-	 */
-	static getAccessToken(): string {
-		// const authState = JSON.parse(localStorage.getItem(AuthService.authKey)) as AuthResultDto;
-		return sessionStorage.getItem("access_token");
 	}
 
 	static getUser(): UserDto {
@@ -103,64 +86,21 @@ export class AuthService {
 	// }
 
 	login(): void {
-		this.oauth.loadDiscoveryDocument().then(() => {
-			this.oauth.tryLoginCodeFlow().then(() => {
-				if (this.oauth.hasValidAccessToken()) {
-					this.authApi.whoAmI().subscribe({
-						next: user => {
-							// console.log({ user });
-							AuthService.setAuthState(user);
-							this.store.dispatch(
-								AuthActions.login({
-									user
-								})
-							);
-						},
-						error: err => {
-							console.error(
-								"User has an access token, but Student-Mgmt-API failed to authenticate this user."
-							);
-							console.error(err);
-						}
-					});
-				} else {
-					console.log("No valid access token found, initCodeFlow...");
-
-					this.oauth.initCodeFlow();
-				}
-			});
-		});
+		this.oidc.authorize();
 	}
 
-	// tryResumeSession(): void {
-	// 	this.oauth.loadDiscoveryDocument().then(() => {
-	// 		if (this.oauth.hasValidAccessToken()) {
-	// 			this.authApi.whoAmI().subscribe({
-	// 				next: user => {
-	// 					// console.log({ user });
-	// 					AuthService.setAuthState(user);
-	// 					this.store.dispatch(
-	// 						AuthActions.login({
-	// 							user
-	// 						})
-	// 					);
-	// 				},
-	// 				error: err => {
-	// 					console.error(
-	// 						"User has an access token, but Student-Mgmt-API failed to authenticate this user."
-	// 					);
-	// 					console.error(err);
-	// 				}
-	// 			});
-	// 		} else {
-	// 			console.log("No valid access token found.");
-	// 			//
-	// 		}
-	// 	});
-	// }
-
 	logout(): void {
-		this.oauth.revokeTokenAndLogout(true).then(() => {
+		// For testing refresh
+		// this.oidc.forceRefreshSession().subscribe({
+		// 	next: () => {
+		// 		console.log("forceRefreshSession success");
+		// 	},
+		// 	error: err => {
+		// 		console.error("forceRefreshSession error", err);
+		// 	}
+		// });
+
+		this.oidc.logoff().subscribe(() => {
 			this.store.dispatch(AuthActions.logout());
 		});
 	}
