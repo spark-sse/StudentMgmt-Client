@@ -17,7 +17,8 @@
 				"assets": [
 					"apps/client/src/favicon.ico",
 					"apps/client/src/assets",
-					"apps/client/src/env.js"
+					"apps/client/src/env.js",
+					"apps/client/src/silent-refresh.html"
 				],
 				"styles": [
 					"apps/client/src/custom-theme.scss",
