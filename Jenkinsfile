@@ -7,6 +7,8 @@ pipeline {
         DEMO_SERVER = '147.172.178.30'
         DEMO_SERVER_BACKEND_PORT = '3000'
         DEMO_SERVER_BACKEND_URL = "http://${env.DEMO_SERVER}:${env.DEMO_SERVER_BACKEND_PORT}"
+        AUTH_CLIENT_ID = 'stmgmt-client'
+        AUTH_ISSUER_URL = 'https://staging.sse.uni-hildesheim.de:8443/realms/test-ldap-realm/'
     }
     
     stages {
@@ -53,7 +55,9 @@ pipeline {
                     sh """
                         ssh -i ~/.ssh/id_rsa_student_mgmt_backend elscha@${env.DEMO_SERVER} <<EOF
                             sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" /var/www/html2/WEB-APP/env.js
-                            exit
+                            sed -i "s|window\\.__env\\.AUTH_ISSUER_URL = .*|window\\.__env\\.AUTH_ISSUER_URL = \\"${env.AUTH_ISSUER_URL}\\";|g" /var/www/html2/WEB-APP/env.js
+                            sed -i "s|window\\.__env\\.AUTH_CLIENT_ID = .*|window\\.__env\\.AUTH_CLIENT_ID = \\"${env.AUTH_CLIENT_ID}\\";|g" /var/www/html2/WEB-APP/env.js
+                        exit
                         EOF
                     """
                 }
