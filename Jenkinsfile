@@ -1,7 +1,11 @@
 pipeline {
-    agent any
-
-    tools {nodejs "NodeJS 16.13"}
+    agent {
+        docker {
+            image 'node:18-bullseye'
+            label 'project_digitalcampus'
+            args '-u root:root'
+        }
+    }
     
     environment {
         DEMO_SERVER = '147.172.178.30'
@@ -12,13 +16,6 @@ pipeline {
     }
     
     stages {
-
-        stage('Git') {
-            steps {
-                cleanWs()
-                git 'https://github.com/Student-Management-System/StudentMgmt-Client.git'
-            }
-        }
 
         stage('Install Dependencies') {
             steps {
@@ -57,7 +54,7 @@ pipeline {
                             sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" /var/www/html2/WEB-APP/env.js
                             sed -i "s|window\\.__env\\.AUTH_ISSUER_URL = .*|window\\.__env\\.AUTH_ISSUER_URL = \\"${env.AUTH_ISSUER_URL}\\";|g" /var/www/html2/WEB-APP/env.js
                             sed -i "s|window\\.__env\\.AUTH_CLIENT_ID = .*|window\\.__env\\.AUTH_CLIENT_ID = \\"${env.AUTH_CLIENT_ID}\\";|g" /var/www/html2/WEB-APP/env.js
-                        exit
+                            exit
                         EOF
                     """
                 }
