@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'node:18-bullseye'
-            label 'project_digitalcampus'
             args '-u root:root'
         }
     }
