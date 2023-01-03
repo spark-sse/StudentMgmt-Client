@@ -48,7 +48,7 @@ pipeline {
                 sh """sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js"""
                 sshagent(['STM-SSH-DEMO']) {
                     sh "ssh -o StrictHostKeyChecking=no -l elscha ${env.DEMO_SERVER} rm -rf /var/www/html2/WEB-APP/*"
-                    sh "scp -pqr dist/apps/client/. elscha@${env.DEMO_SERVER}:/var/www/html2/WEB-APP/"
+                    sh "scp -pqr dist/apps/client/* elscha@${env.DEMO_SERVER}:/var/www/html2/WEB-APP/"
                 }
             }
         }
