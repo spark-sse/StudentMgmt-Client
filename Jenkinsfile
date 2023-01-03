@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh """sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js"""
                 sshagent(['STM-SSH-DEMO']) {
-                    sh "ssh -l elscha ${env.DEMO_SERVER} rm -r /var/www/html2/WEB-APP/*"
+                    sh "ssh -o StrictHostKeyChecking=no -l elscha ${env.DEMO_SERVER} rm -r /var/www/html2/WEB-APP/*"
                     sh "sftp elscha@${env.DEMO_SERVER} <<< 'put -r dist/apps/client/*'"
                 }
             }
