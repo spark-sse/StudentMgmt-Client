@@ -36,7 +36,13 @@ pipeline {
                 sh 'tar czf Client.tar.gz dist/apps/client/'
             }
         }
-        
+
+        stage('Publish Results') {
+            steps {
+                archiveArtifacts artifacts: '*.tar.gz'
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh """sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js"""
@@ -46,11 +52,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('Publish Results') {
-            steps {
-                archiveArtifacts artifacts: '*.tar.gz'
-            }
-        }
+
     }
 }
