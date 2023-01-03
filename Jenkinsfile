@@ -17,6 +17,9 @@ pipeline {
     stages {
 
         stage('Install Dependencies') {
+			environment {
+                CYPRESS_CACHE_FOLDER = '/tmp/cache'
+			}
             steps {
                 sh 'npm ci --force --unsafe-perm=true --allow-root'
             }
