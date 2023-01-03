@@ -40,22 +40,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['Stu-Mgmt_Demo-System']) {
-                    sh """
-                        ssh -i ~/.ssh/id_rsa_student_mgmt_backend elscha@${env.DEMO_SERVER} <<EOF
-                            cd /var/www/html2/WEB-APP || exit 1
-                            rm -f -r *
-                            exit
-                        EOF
-                    """
-                    sh "scp -i ~/.ssh/id_rsa_student_mgmt_backend -r dist/apps/client/* elscha@${env.DEMO_SERVER}:/var/www/html2/WEB-APP"
-                    sh """
-                        ssh -i ~/.ssh/id_rsa_student_mgmt_backend elscha@${env.DEMO_SERVER} <<EOF
-                            sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" /var/www/html2/WEB-APP/env.js
-                            sed -i "s|window\\.__env\\.AUTH_ISSUER_URL = .*|window\\.__env\\.AUTH_ISSUER_URL = \\"${env.AUTH_ISSUER_URL}\\";|g" /var/www/html2/WEB-APP/env.js
-                            sed -i "s|window\\.__env\\.AUTH_CLIENT_ID = .*|window\\.__env\\.AUTH_CLIENT_ID = \\"${env.AUTH_CLIENT_ID}\\";|g" /var/www/html2/WEB-APP/env.js
-                            exit
-                        EOF
-                    """
+					sh "ssh -o StrictHostKeyChecking=no -l elscha@${env.DEMO_SERVER} uname -r"
                 }
             }
         }
