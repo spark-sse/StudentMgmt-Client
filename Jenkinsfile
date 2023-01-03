@@ -18,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'CYPRESS_CACHE_FOLDER=/tmp/.cache npm ci --force --unsafe-perm=true --allow-root'
+                sh 'CYPRESS_CACHE_FOLDER=/tmp/.cache npm ci --force'
             }
         }
         
@@ -39,8 +39,9 @@ pipeline {
         
         stage('Deploy') {
             steps {
+                sh "sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js"
                 sshagent(['STM-SSH-DEMO']) {
-				    sh "ssh -o StrictHostKeyChecking=no -l elscha ${env.DEMO_SERVER} uname -a"
+					sh 'sftp elscha@${env.DEMO_SERVER} <<< "rm /var/www/html2/WEB-APP/* && put dist/apps/client/*"'
                 }
             }
         }
