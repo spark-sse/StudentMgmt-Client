@@ -39,9 +39,9 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                sh 'sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js'
+                sh """sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js
                 sshagent(['STM-SSH-DEMO']) {
-					sh 'sftp elscha@${env.DEMO_SERVER} <<< "rm /var/www/html2/WEB-APP/* && put -r dist/apps/client/*"'
+                    sh "sftp elscha@${env.DEMO_SERVER} <<< \\"rm /var/www/html2/WEB-APP/* && put -r dist/apps/client/*\\""
                 }
             }
         }
