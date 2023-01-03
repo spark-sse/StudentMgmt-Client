@@ -46,6 +46,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """sed -i "s|window\\.__env\\.API_BASE_PATH = .*|window\\.__env\\.API_BASE_PATH = \\"${env.DEMO_SERVER_BACKEND_URL}\\";|g" dist/apps/client/env.js"""
+                sh """sed -i "s|window\\.__env\\.AUTH_ISSUER_URL = .*|window\\.__env\\.AUTH_ISSUER_URL = \\"${env.AUTH_ISSUER_URL}\\";|g" dist/apps/client/env.js"""
+              	sh """sed -i "s|window\\.__env\\.AUTH_CLIENT_ID = .*|window\\.__env\\.AUTH_CLIENT_ID = \\"${env.AUTH_CLIENT_ID}\\";|g" dist/apps/client/env.js"""
                 sshagent(['STM-SSH-DEMO']) {
                     sh "ssh -o StrictHostKeyChecking=no -l elscha ${env.DEMO_SERVER} rm -rf /var/www/html2/WEB-APP/*"
                     sh "scp -pqr dist/apps/client/* elscha@${env.DEMO_SERVER}:/var/www/html2/WEB-APP/"
