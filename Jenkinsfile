@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18-bullseye'
+            args '-u root:root'
         }
     }
     
@@ -17,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci --force'
+                sh 'npm ci --force --unsafe-perm=true --allow-root'
             }
         }
         
