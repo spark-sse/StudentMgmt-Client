@@ -40,7 +40,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(credentials: ['Stu-Mgmt_Demo-System']) {
-					sh "ssh -o StrictHostKeyChecking=no -l elscha@${env.DEMO_SERVER} uname -r"
+					sh "ssh -o StrictHostKeyChecking=no -l elscha ${env.DEMO_SERVER} uname -a"
                 }
             }
         }
