@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18-bullseye'
-            args '-u root:root'
+            args '--tmpfs /.cache --tmpfs /.npm'
         }
     }
     
@@ -18,7 +18,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'CYPRESS_CACHE_FOLDER=/tmp/.cache npm ci --force'
+                sh 'npm ci --force'
             }
         }
         
