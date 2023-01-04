@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18-bullseye'
-            args '--tmpfs /.cache --tmpfs /.npm'
+            args '--tmpfs /.cache -v $HOME/.npm:/.npm'
         }
     }
     
