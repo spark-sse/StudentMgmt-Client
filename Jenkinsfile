@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18-bullseye'
+			label 'docker'
             args '--tmpfs /.cache -v $HOME/.npm:/.npm'
         }
     }
@@ -9,7 +10,7 @@ pipeline {
     environment {
         DEMO_SERVER = '147.172.178.30'
         DEMO_SERVER_BACKEND_PORT = '3000'
-		DEMO_USER = 'jenkinsci'
+		DEMO_USER = 'elscha'
         DEMO_SERVER_BACKEND_URL = "http://${env.DEMO_SERVER}:${env.DEMO_SERVER_BACKEND_PORT}"
         AUTH_CLIENT_ID = 'stmgmt-client'
         AUTH_ISSUER_URL = 'https://staging.sse.uni-hildesheim.de:8443/realms/test-ldap-realm/'
