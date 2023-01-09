@@ -3,7 +3,7 @@ pipeline {
         docker {
             image 'node:18-bullseye'
 			label 'docker'
-            args '-u root:root --tmpfs /root/.cache/Cypress -v $HOME/.npm:/root/.npm'
+            args '-u root:root  v $HOME/.npm:/root/.npm'
         }
     }
     
@@ -20,7 +20,7 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci --force'
+                sh 'CYPRESS_CACHE_FOLDER=/tmp/.cache npm ci --force'
             }
         }
         
