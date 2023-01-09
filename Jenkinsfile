@@ -3,7 +3,7 @@ pipeline {
         docker {
             image 'node:18-bullseye'
 			label 'docker'
-            args '--tmpfs /.cache -v $HOME/.npm:/.npm'
+            args '-u root:root --tmpfs /root/.cache/ -v $HOME/.npm:/root/.npm'
         }
     }
     
