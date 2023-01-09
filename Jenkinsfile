@@ -51,7 +51,7 @@ pipeline {
                 sh """sed -i "s|window\\.__env\\.AUTH_ISSUER_URL = .*|window\\.__env\\.AUTH_ISSUER_URL = \\"${env.AUTH_ISSUER_URL}\\";|g" dist/apps/client/env.js"""
               	sh """sed -i "s|window\\.__env\\.AUTH_CLIENT_ID = .*|window\\.__env\\.AUTH_CLIENT_ID = \\"${env.AUTH_CLIENT_ID}\\";|g" dist/apps/client/env.js"""
                 sshagent(['STM-SSH-DEMO']) {
-					sh "ssh -o StrictHostKeyChecking=no -l ${env.DEMO_USER} ${env.DEMO_SERVER} rm -rf /var/www/html2/WEB-APP/*"
+					sh "ssh -o StrictHostKeyChecking=no ${env.DEMO_USER}@${env.DEMO_SERVER} rm -rf /var/www/html2/WEB-APP/*"
                     sh "scp -pqr dist/apps/client/* ${env.DEMO_USER}@${env.DEMO_SERVER}:/var/www/html2/WEB-APP/"
                 }
             }
